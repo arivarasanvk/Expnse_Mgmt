@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExpnseFormSubmitController;
+use App\Models\ExpnseFormVal;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Route::get('editDataForm/{rowvalId}',['as'=>'editDataForm', 'uses'=> 'App\Http\Controllers\ExpnseFormSubmitController@editDataFormController']);
+
+Route::get('removeDataForm/{rowvalId}',['as'=>'removeDataForm', 'uses'=> 'App\Http\Controllers\ExpnseFormSubmitController@removeDataFormController']);
+
+Route::get('/editDataForm/{rowvalId}', function($rowvalId){
+    
+    return view("ProductDetailsTableView",['ExpnseFormValViewData'=>ExpnseFormVal::all(),'ExpnseFormEditData'=>ExpnseFormVal::wherePrdid($rowvalId)->first()]);
+
+    } )->name('editDataForm');
+
+
+Route::get('/ProductDetailsTableView',function(){//Home
+    return view("ProductDetailsTableView",['ExpnseFormValViewData'=>ExpnseFormVal::all(),'ExpnseFormEditData'=>null]);
+});
+
+
+Route::post("formDataSumbit",[ExpnseFormSubmitController::class,'updateDataToDB']);
+Route::post("editDataForm/formDataSumbit",[ExpnseFormSubmitController::class,'updateDataToDB']);
+
+Route::get('/getAllDataFromDB',[ExpnseFormSubmitController::class,'getAllDataFromDB']);
